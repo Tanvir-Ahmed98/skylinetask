@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/skylinetask
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3007:3306"   # Maps host port 3007 → container port 3306
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db    # Inside Docker, we reference the container by name
+      PMA_PORT: 3306  # Container's internal port
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - db
+
+volumes:
+  dbdata:
