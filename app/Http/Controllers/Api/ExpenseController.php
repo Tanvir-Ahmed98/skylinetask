@@ -9,7 +9,8 @@ class ExpenseController extends Controller
 {
     public function __construct(protected ExpenseService $service)
     {
-        $this->middleware('validate.expense')->only(['store','update']);
+				 $this->middleware('auth:sanctum');
+		        $this->middleware('validate.expense')->only(['store','update']);
     }
 
     public function index()
